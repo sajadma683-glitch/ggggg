@@ -3,20 +3,19 @@ set -e
 
 echo "🚀 G2Ray-Light Ultra Lite Starting..."
 
-# رفع مشکل apt
+# رفع apt و نصب پکیج‌ها
 sudo rm -rf /var/lib/apt/lists/partial
 sudo apt-get update && sudo apt-get install -y --no-install-recommends \
-    ca-certificates curl unzip uuid-runtime \
-    && sudo rm -rf /var/lib/apt/lists/*
+    ca-certificates curl unzip uuid-runtime
 
-# دانلود sing-box (لینک درست)
+# دانلود و نصب sing-box با sudo
 echo "📥 Downloading sing-box..."
 curl -L -o /tmp/sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/v1.13.11/sing-box-1.13.11-linux-amd64.tar.gz"
 
-tar -xzf /tmp/sing-box.tar.gz -C /usr/local/bin/
-mv /usr/local/bin/sing-box-1.13.11-linux-amd64/sing-box /usr/local/bin/sing-box
-chmod +x /usr/local/bin/sing-box
-rm -rf /tmp/sing-box*
+sudo tar -xzf /tmp/sing-box.tar.gz -C /usr/local/bin/
+sudo mv /usr/local/bin/sing-box-1.13.11-linux-amd64/sing-box /usr/local/bin/sing-box
+sudo chmod +x /usr/local/bin/sing-box
+sudo rm -rf /tmp/sing-box* /usr/local/bin/sing-box-1.13.11-linux-amd64
 
 # متغیرها
 UUID=$(uuidgen)
@@ -27,8 +26,8 @@ echo "🔑 UUID: ${UUID}"
 echo "🌐 Domain: ${DOMAIN}"
 
 # کانفیگ
-mkdir -p /etc/sing-box
-cat > /etc/sing-box/config.json << EOF
+sudo mkdir -p /etc/sing-box
+cat > /tmp/config.json << EOF
 {
   "log": { "level": "warn" },
   "inbounds": [{
@@ -45,16 +44,18 @@ cat > /etc/sing-box/config.json << EOF
   "outbounds": [{ "type": "direct" }]
 }
 EOF
+sudo mv /tmp/config.json /etc/sing-box/config.json
 
+# نمایش لینک
 echo ""
 echo "✅ آماده شد!"
 echo ""
 echo "🔗 لینک VLESS:"
 echo "vless://${UUID}@${DOMAIN}:443?security=tls&flow=xtls-rprx-vision&fp=chrome&type=tcp#G2Ray-Light"
 echo ""
-echo "📱 حالا این لینک رو در Nekobox یا v2rayNG ایمپورت کن"
-echo "⚠️  بعد از تست، Codespace را Stop کن!"
+echo "📱 این لینک رو در Nekobox یا v2rayNG ایمپورت کن"
+echo "⚠️  بعد از استفاده حتما Codespace را Stop کن!"
 echo ""
 
 # اجرا
-exec /usr/local/bin/sing-box run -c /etc/sing-box/config.json
+exec sudo /usr/local/bin/sing-box run -c /etc/sing-box/config.json
