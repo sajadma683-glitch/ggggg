@@ -3,17 +3,17 @@ set -e
 
 echo "🚀 G2Ray-Light Ultra Lite Starting..."
 
-# نصب حداقل وابستگی
-apt-get update && apt-get install -y --no-install-recommends \
+# نصب با sudo
+sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     ca-certificates curl unzip uuid-runtime \
-    && rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/*
 
-# دانلود sing-box (سبک و سریع)
+# دانلود sing-box (نسخه پایدار)
 echo "📥 Downloading sing-box..."
-SING_VERSION="1.14.0-alpha.21"
-curl -L -o /tmp/sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/${SING_VERSION}/sing-box-${SING_VERSION#v}-linux-amd64.tar.gz"
+curl -L -o /tmp/sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/v1.13.11/sing-box-1.13.11-linux-amd64.tar.gz"
+
 tar -xzf /tmp/sing-box.tar.gz -C /usr/local/bin/
-mv /usr/local/bin/sing-box-*/sing-box /usr/local/bin/sing-box
+mv /usr/local/bin/sing-box-1.13.11-linux-amd64/sing-box /usr/local/bin/sing-box
 chmod +x /usr/local/bin/sing-box
 rm -rf /tmp/sing-box*
 
@@ -25,7 +25,7 @@ DOMAIN="${CODESPACE_NAME}.github.dev"
 echo "🔑 UUID: ${UUID}"
 echo "🌐 Domain: ${DOMAIN}"
 
-# کانفیگ خیلی سبک
+# کانفیگ
 mkdir -p /etc/sing-box
 cat > /etc/sing-box/config.json << EOF
 {
@@ -52,7 +52,7 @@ echo ""
 echo "🔗 لینک VLESS:"
 echo "vless://${UUID}@${DOMAIN}:443?security=tls&flow=xtls-rprx-vision&fp=chrome&type=tcp#G2Ray-Light"
 echo ""
-echo "📱 در Nekobox ، v2rayNG یا Clash Meta ایمپورت کن"
+echo "📱 در Nekobox یا v2rayNG ایمپورت کن"
 echo "⚠️ بعد از استفاده حتما Codespace را Stop کن!"
 echo ""
 
