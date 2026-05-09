@@ -1,0 +1,17 @@
+{
+  "name": "G2Ray-Light",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "hostRequirements": {
+    "cpus": 1,
+    "memory": "2gb"
+  },
+  "forwardPorts": [443],
+  "portsAttributes": {
+    "443": {
+      "label": "VLESS",
+      "visibility": "public",
+      "onAutoForward": "ignore"
+    }
+  },
+  "postCreateCommand": "bash setup.sh"
+}
